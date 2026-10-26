@@ -3,17 +3,43 @@
 <title>じぃばぁの町 Ver.2 開発版</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#e9f0e8;color:#304b43;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}header{padding:12px 16px;background:#fffdf6;display:flex;justify-content:space-between;align-items:center;gap:10px}h1{font-size:17px;margin:0}small{color:#668278}.wrap{max-width:850px;margin:auto}.toolbar{display:flex;gap:8px;flex-wrap:wrap;padding:10px}button{border:1px solid #b4c9b7;border-radius:12px;background:#fffef9;color:#2b5444;padding:10px 13px;font-weight:700;touch-action:manipulation}.viewport{margin:0 10px;overflow:hidden;position:relative;border:3px solid #a2bca7;border-radius:18px;background:#b8d5ac;touch-action:none;aspect-ratio:1.3;max-height:65vh}.world{position:absolute;left:0;top:0;width:900px;height:650px;transform-origin:0 0;background:repeating-linear-gradient(90deg,transparent 0 69px,#9cc69b33 69px 70px),repeating-linear-gradient(0deg,transparent 0 69px,#9cc69b33 69px 70px),#b9d6a7}.hill{position:absolute;background:#8cb999;border-radius:50%;opacity:.6}.road{position:absolute;background:#d4bd91;border:2px dashed #bca67f;border-radius:25px}.tile{position:absolute;display:grid;place-items:center;flex-direction:column;gap:2px;width:95px;height:90px;background:#f5f3d7bb;border:2px solid #8baf89;border-radius:20px;box-shadow:0 5px #80a77d55;font-size:38px;cursor:pointer;touch-action:none}.tile span{font-size:12px;font-weight:700;background:#fffdf6dd;padding:2px 5px;border-radius:7px}.person{background:#fff0d3;border-color:#d5ac85}.field{background:#9cba77;border-color:#70965a}.hint{padding:8px 15px;font-size:13px}.panel{margin:8px 10px 20px;padding:15px;border-radius:15px;background:#fffdf7;min-height:115px}#status{font-size:13px;color:#577568}#detail{line-height:1.7}footer{text-align:center;padding:10px;color:#72887b;font-size:12px}
-</style></head><body><div class="wrap"><header><h1>🏡 じぃばぁの町 <small>Ver.2 開発試作 0.2.0</small></h1><small id="status">保存準備中</small></header>
+
+/* Ver.2 scenic pass: CSS-only illustrations, no external assets */
+.world{background:radial-gradient(ellipse at 20% 22%,#a7c99d 0 13%,transparent 14%),radial-gradient(ellipse at 77% 20%,#a6c99d 0 16%,transparent 17%),radial-gradient(ellipse at 48% 90%,#a6c89d 0 18%,transparent 19%),repeating-linear-gradient(35deg,transparent 0 42px,#ffffff09 43px 44px),#b8d4a7}
+.world:before,.world:after{content:"";position:absolute;pointer-events:none;border-radius:50%;background:radial-gradient(circle at 40% 42%,#5b8b60 0 26%,#739e69 27% 50%,#4c7d59 51% 69%,transparent 70%);filter:drop-shadow(8px 10px 2px #527d5130)}
+.world:before{width:125px;height:115px;left:30px;top:65px}.world:after{width:130px;height:115px;right:35px;top:45px}
+.hill{background:#9dc49a;opacity:.38;filter:blur(8px)}
+.road{background:repeating-linear-gradient(90deg,#d9c69f 0 22px,#d7c29a 22px 44px);border:3px solid #b7a78077;box-shadow:inset 0 3px #f5e5c56b;border-radius:20px}
+.tile{background:transparent;border:0;box-shadow:none;border-radius:0;display:flex;align-items:center;justify-content:flex-end;padding-bottom:1px;gap:1px;font-size:0;overflow:visible}
+.tile span{position:relative;z-index:5;font-size:12px;background:#fffdf3e8;color:#465f48;border:1px solid #adc2a6;box-shadow:0 2px 4px #526b4930}
+.tile:before,.tile:after{content:"";position:absolute;pointer-events:none}
+.tile:not(.field):not(.person){filter:drop-shadow(7px 8px 2px #4c6b493c)}
+.tile[data-id^="home"]:before{left:15px;top:32px;width:66px;height:48px;background:linear-gradient(90deg,#f6e5bf 0 75%,#d2bb92 76%);border:2px solid #997b61;border-radius:3px 3px 5px 5px;box-shadow:inset 0 -7px #ddc79e}
+.tile[data-id^="home"]:after{left:7px;top:10px;width:82px;height:48px;background:linear-gradient(140deg,#765f52 0 48%,#5b4b44 49% 100%);clip-path:polygon(50% 0,100% 66%,91% 78%,50% 28%,8% 78%,0 66%);filter:drop-shadow(0 3px 1px #56483866)}
+.tile[data-id^="home"]{background:linear-gradient(#698f75,#698f75) 39px 57px/15px 23px no-repeat,linear-gradient(#a7c5b8,#a7c5b8) 20px 47px/13px 13px no-repeat,linear-gradient(#a7c5b8,#a7c5b8) 64px 47px/12px 13px no-repeat}
+.tile[data-id="home2"]:after{background:linear-gradient(140deg,#738a7a 0 48%,#526e60 49% 100%)}
+.tile.field{background:linear-gradient(150deg,#8c704c,#765d3e);border:5px solid #a99268;border-radius:12px;box-shadow:6px 8px #678a584a;transform:skewY(-5deg);font-size:0}
+.tile.field:before{inset:8px;background:repeating-linear-gradient(90deg,#614a35 0 8px,#9d7b50 9px 19px);border-radius:4px}
+.tile.field:after{left:15px;top:12px;width:65px;height:54px;background:radial-gradient(ellipse at 20% 30%,#5e9b4f 0 11%,transparent 12%),radial-gradient(ellipse at 50% 42%,#70a75b 0 12%,transparent 13%),radial-gradient(ellipse at 75% 30%,#5e9b4f 0 11%,transparent 12%),radial-gradient(ellipse at 30% 80%,#6da65b 0 10%,transparent 11%),radial-gradient(ellipse at 75% 78%,#6da65b 0 10%,transparent 11%)}
+.tile.field span{transform:skewY(5deg)}
+.tile[data-id="barn"]:before{left:17px;top:32px;width:64px;height:48px;background:linear-gradient(90deg,#aa8560,#d1ad7d);border:2px solid #7f664e;border-radius:3px}
+.tile[data-id="barn"]:after{left:10px;top:10px;width:78px;height:44px;background:#766455;clip-path:polygon(50% 0,100% 65%,92% 77%,50% 26%,8% 77%,0 65%)}
+.tile[data-id="shop"]:before{left:11px;top:30px;width:75px;height:48px;background:linear-gradient(#f2dfb3 0 62%,#ae865a 63%);border:2px solid #8b765d;border-radius:4px}
+.tile[data-id="shop"]:after{left:7px;top:14px;width:83px;height:35px;background:repeating-linear-gradient(90deg,#b76f57 0 13px,#f1e2b5 13px 26px);clip-path:polygon(5% 0,95% 0,100% 85%,85% 100%,70% 85%,55% 100%,40% 85%,25% 100%,10% 85%,0 100%)}
+.tile.person{font-size:32px;background:#fff5debf;border:2px solid #bd9f7c;border-radius:50% 50% 14px 14px;box-shadow:5px 6px #57784d40;padding-bottom:3px}
+.tile.person span{font-size:11px}
+.tile:focus-visible{outline:4px solid #fff;outline-offset:3px}
+</style></head><body><div class="wrap"><header><h1>🏡 じぃばぁの町 <small>Ver.2 開発試作 0.3.0</small></h1><small id="status">保存準備中</small></header>
 <div class="toolbar"><button id="zoomIn">＋ 拡大</button><button id="zoomOut">－ 縮小</button><button id="reset">全体を見る</button></div>
 <div class="viewport" id="viewport"><div class="world" id="world">
 <div class="hill" style="left:50px;top:25px;width:330px;height:130px"></div><div class="hill" style="left:480px;top:20px;width:320px;height:145px"></div>
 <div class="road" style="left:65px;top:300px;width:760px;height:55px"></div><div class="road" style="left:435px;top:180px;width:55px;height:320px"></div>
-<div class="tile" data-id="home1" style="left:180px;top:190px">🏠<span>家①</span></div><div class="tile" data-id="home2" style="left:600px;top:190px">🏡<span>家②</span></div>
-<div class="tile field" data-id="field1" style="left:155px;top:410px">🌱<span>畑①</span></div><div class="tile field" data-id="field2" style="left:265px;top:410px">🌱<span>畑②</span></div><div class="tile field" data-id="field3" style="left:155px;top:515px">🌱<span>畑③</span></div><div class="tile field" data-id="field4" style="left:265px;top:515px">🌱<span>畑④</span></div>
-<div class="tile" data-id="barn" style="left:565px;top:420px">🛖<span>納屋</span></div><div class="tile" data-id="shop" style="left:690px;top:420px">🧺<span>直売所</span></div>
+<div class="tile" data-id="home1" style="left:180px;top:190px"><span>家①</span></div><div class="tile" data-id="home2" style="left:600px;top:190px"><span>家②</span></div>
+<div class="tile field" data-id="field1" style="left:155px;top:410px"><span>畑①</span></div><div class="tile field" data-id="field2" style="left:265px;top:410px"><span>畑②</span></div><div class="tile field" data-id="field3" style="left:155px;top:515px"><span>畑③</span></div><div class="tile field" data-id="field4" style="left:265px;top:515px"><span>畑④</span></div>
+<div class="tile" data-id="barn" style="left:565px;top:420px"><span>納屋</span></div><div class="tile" data-id="shop" style="left:690px;top:420px"><span>直売所</span></div>
 <div class="tile person" data-id="elder1" style="left:320px;top:210px;width:75px;height:75px">👴<span>じぃ</span></div><div class="tile person" data-id="elder2" style="left:505px;top:350px;width:75px;height:75px">👵<span>ばぁ</span></div>
 </div></div><div class="hint">指1本で町を移動、2本で拡大・縮小。建物や住民をタップしてみてね。</div>
-<section class="panel"><strong>町のようす</strong><div id="detail">ここはVer.2の基本操作を確認する開発試作です。畑やお店の機能は次の段階で追加します。</div></section>
+<section class="panel"><strong>町のようす</strong><div id="detail">町の景色を整えた開発試作です。建物や畑の操作は次の段階で追加します。</div></section>
 <footer>元の試作版とは別の保存領域を使用します。</footer></div>
 <script>
 (()=>{'use strict';
