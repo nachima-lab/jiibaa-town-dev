@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>じぃばぁの町 Ver.2 開発版</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#e9f0e8;color:#304b43;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}header{padding:12px 16px;background:#fffdf6;display:flex;justify-content:space-between;align-items:center;gap:10px}h1{font-size:17px;margin:0}small{color:#668278}.wrap{max-width:850px;margin:auto}.toolbar{display:flex;gap:8px;flex-wrap:wrap;padding:10px}button{border:1px solid #b4c9b7;border-radius:12px;background:#fffef9;color:#2b5444;padding:10px 13px;font-weight:700;touch-action:manipulation}.viewport{margin:0 10px;overflow:hidden;position:relative;border:3px solid #a2bca7;border-radius:18px;background:#b8d5ac;touch-action:none;aspect-ratio:1.3;max-height:65vh}.world{position:absolute;left:0;top:0;width:900px;height:650px;transform-origin:0 0;background:repeating-linear-gradient(90deg,transparent 0 69px,#9cc69b33 69px 70px),repeating-linear-gradient(0deg,transparent 0 69px,#9cc69b33 69px 70px),#b9d6a7}.hill{position:absolute;background:#8cb999;border-radius:50%;opacity:.6}.road{position:absolute;background:#d4bd91;border:2px dashed #bca67f;border-radius:25px}.tile{position:absolute;display:grid;place-items:center;flex-direction:column;gap:2px;width:95px;height:90px;background:#f5f3d7bb;border:2px solid #8baf89;border-radius:20px;box-shadow:0 5px #80a77d55;font-size:38px;cursor:pointer;touch-action:none}.tile span{font-size:12px;font-weight:700;background:#fffdf6dd;padding:2px 5px;border-radius:7px}.person{background:#fff0d3;border-color:#d5ac85}.field{background:#9cba77;border-color:#70965a}.hint{padding:8px 15px;font-size:13px}.panel{margin:8px 10px 20px;padding:15px;border-radius:15px;background:#fffdf7;min-height:115px}#status{font-size:13px;color:#577568}#detail{line-height:1.7}footer{text-align:center;padding:10px;color:#72887b;font-size:12px}
+</style></head><body><div class="wrap"><header><h1>🏡 じぃばぁの町 <small>Ver.2 開発試作 0.2.0</small></h1><small id="status">保存準備中</small></header>
+<div class="toolbar"><button id="zoomIn">＋ 拡大</button><button id="zoomOut">－ 縮小</button><button id="reset">全体を見る</button></div>
+<div class="viewport" id="viewport"><div class="world" id="world">
+<div class="hill" style="left:50px;top:25px;width:330px;height:130px"></div><div class="hill" style="left:480px;top:20px;width:320px;height:145px"></div>
+<div class="road" style="left:65px;top:300px;width:760px;height:55px"></div><div class="road" style="left:435px;top:180px;width:55px;height:320px"></div>
+<div class="tile" data-id="home1" style="left:180px;top:190px">🏠<span>家①</span></div><div class="tile" data-id="home2" style="left:600px;top:190px">🏡<span>家②</span></div>
+<div class="tile field" data-id="field1" style="left:155px;top:410px">🌱<span>畑①</span></div><div class="tile field" data-id="field2" style="left:265px;top:410px">🌱<span>畑②</span></div><div class="tile field" data-id="field3" style="left:155px;top:515px">🌱<span>畑③</span></div><div class="tile field" data-id="field4" style="left:265px;top:515px">🌱<span>畑④</span></div>
+<div class="tile" data-id="barn" style="left:565px;top:420px">🛖<span>納屋</span></div><div class="tile" data-id="shop" style="left:690px;top:420px">🧺<span>直売所</span></div>
+<div class="tile person" data-id="elder1" style="left:320px;top:210px;width:75px;height:75px">👴<span>じぃ</span></div><div class="tile person" data-id="elder2" style="left:505px;top:350px;width:75px;height:75px">👵<span>ばぁ</span></div>
+</div></div><div class="hint">指1本で町を移動、2本で拡大・縮小。建物や住民をタップしてみてね。</div>
+<section class="panel"><strong>町のようす</strong><div id="detail">ここはVer.2の基本操作を確認する開発試作です。畑やお店の機能は次の段階で追加します。</div></section>
+<footer>元の試作版とは別の保存領域を使用します。</footer></div>
+<script>
+(()=>{'use strict';
+const vp=document.getElementById('viewport'),world=document.getElementById('world'),status=document.getElementById('status'),detail=document.getElementById('detail');
+const KEY='jiibaa-town-ver2-dev-v1';let view={x:0,y:0,z:1},selected=null;
+try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y)&&Number.isFinite(v.z)){view={x:v.x,y:v.y,z:Math.max(.4,Math.min(2.5,v.z))};selected=typeof v.selected==='string'?v.selected:null}}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({...view,selected}));status.textContent='保存済み ✓'}catch(e){status.textContent='保存できませんでした'}}
+function clamp(){const w=vp.clientWidth,h=vp.clientHeight,ww=900*view.z,wh=650*view.z;view.x=ww<=w?(w-ww)/2:Math.max(w-ww,Math.min(0,view.x));view.y=wh<=h?(h-wh)/2:Math.max(h-wh,Math.min(0,view.y))}
+function paint(){clamp();world.style.transform=`translate(${view.x}px,${view.y}px) scale(${view.z})`;persist()}
+function fit(){view.z=Math.min(vp.clientWidth/900,vp.clientHeight/650);view.x=0;view.y=0;paint()}
+if(!localStorage.getItem(KEY))fit();else paint();
+function zoom(f,cx=vp.clientWidth/2,cy=vp.clientHeight/2){const old=view.z,next=Math.max(.4,Math.min(2.5,old*f));view.x=cx-(cx-view.x)*next/old;view.y=cy-(cy-view.y)*next/old;view.z=next;paint()}
+document.getElementById('zoomIn').onclick=()=>zoom(1.25);document.getElementById('zoomOut').onclick=()=>zoom(.8);document.getElementById('reset').onclick=fit;
+const labels={home1:'家①',home2:'家②',field1:'畑①',field2:'畑②',field3:'畑③',field4:'畑④',barn:'納屋',shop:'直売所',elder1:'じぃ',elder2:'ばぁ'};
+const touches=new Map();let last=null,moved=false;
+function midpoint(){const p=[...touches.values()];if(p.length===1)return{x:p[0].x,y:p[0].y,d:0};if(p.length<2)return null;return{x:(p[0].x+p[1].x)/2,y:(p[0].y+p[1].y)/2,d:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)}}
+vp.addEventListener('pointerdown',e=>{vp.setPointerCapture(e.pointerId);touches.set(e.pointerId,{x:e.clientX,y:e.clientY});last=midpoint();if(touches.size===1)moved=false});
+vp.addEventListener('pointermove',e=>{if(!touches.has(e.pointerId))return;touches.set(e.pointerId,{x:e.clientX,y:e.clientY});const now=midpoint();if(last&&now){const dx=now.x-last.x,dy=now.y-last.y;if(Math.abs(dx)+Math.abs(dy)>3||touches.size>1)moved=true;if(touches.size>1&&last.d&&now.d){const r=vp.getBoundingClientRect();zoom(now.d/last.d,now.x-r.left,now.y-r.top)}view.x+=dx;view.y+=dy;paint()}last=now});
+function end(e){touches.delete(e.pointerId);last=midpoint()}
+vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end);
+vp.addEventListener('click',e=>{if(moved){moved=false;return}const t=e.target.closest('[data-id]');if(!t)return;selected=t.dataset.id;detail.textContent=`${labels[selected]}を選びました。詳細な操作は今後の開発で追加します。`;persist()});
+if(selected&&labels[selected])detail.textContent=`${labels[selected]}を選択中です。`;
+window.addEventListener('pagehide',persist);window.addEventListener('resize',paint);
+})();
+</script></body></html>
